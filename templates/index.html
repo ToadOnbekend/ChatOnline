@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!-- Alles scripts MOETEN in de <body> -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Example</title>
+    <link href="static/css/styles.css" rel="stylesheet" type="text/css" />
+<!--    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>-->
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+
+
+
+</head>
+<body>
+<!--    <h1>Upload RAG Demo</h1>-->
+
+
+
+    <div class="sidebar" id="sidebar">
+        <span id="sidebarText">Chats</span>
+        <div class = "controls">
+             <button id="buttonA" type="button" onclick="show_config_screen()">Niewe Chat Maken</button>
+<!--              const messages = document.getElementById('messages');
+        messages.innerHTML = ''; // Verwijdert alle <li>-elementen binnen de lijst-->
+        </div>
+
+        <ul id="chatsL"></ul>
+
+
+    </div>
+
+
+
+
+    <div class="message_container">
+<!--        TODO: Info moet boven bericht staan-->
+            <ul id="messages">
+                <li class="LLMresponds"><p>geen idee</p>
+                <div class="info-of-message">
+                    <div class="name_of_user">Toad</div>
+                    <div class="date_of_message">12:08</div>
+                </div>
+
+                </li>
+            </ul>
+    </div>
+
+        <div class="chatInput">
+<!--                         <input type="file" id="fileInput" multiple>-->
+                         <div id="msgBox">
+<!--                             <div id="messageUser" contenteditable="true"></div>-->
+<!--                             <div id="messageContainer">-->
+                                 <div id="chatt-input" contenteditable="true" data-placeholder="Begin typing..." spellcheck="false"></div>
+                                 <button id="sendButton" onclick="SendMsg()">Stuur</button>
+
+
+                         </div>
+
+        </div>
+
+    <div id="configScreen" class="config-overlay hidden">
+        <div class="config-container">
+             <div class="bordered-container2">
+                 <div class="namingElements">
+                     <input type="text" id="collectionNaming" class="namingCol" placeholder="Chat group name">
+                 </div>
+
+                 <button id="uploadButton" onclick="create_room()">Create Chat</button>
+
+
+            <span class="border-textConfig">New Chat</span>
+        </div>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+   <script src="static\\js\\script.js"></script>
+   <script>socket.emit('goGetChatNames');</script>
+</body>
+</html>
