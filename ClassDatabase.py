@@ -186,7 +186,6 @@ class DatabaseManger:
             }).fetchall()
 
 
-
         for result in retrivedRoleId:
             status = result[0]
 
