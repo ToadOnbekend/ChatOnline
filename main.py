@@ -45,8 +45,13 @@ def handle_register(data):
             databasemrg.add_user(user_id, "User")
             print("\033[33mUser registered", user_id, "\033[0m")
 
+        for i in range(len(sid_of_users)):
+           socketio.emit("PersonConnected", {"Name": user_id}, to=sid_of_users[i])
+
         users[request_sid] = {"user_name": user_id, "current_room": "ffffffff", "requestSid": request_sid}
         sid_of_users.append(request_sid)
+
+
 
         pp.pprint(users)
 
@@ -80,8 +85,19 @@ def give_awnser(data):
 
 @socketio.on("change_room_to")
 def change_room_to(data):
+
     request_sid = request.sid
+    room_came_from = data["old_room"]
     room = data["room_name"]
+
+    for i in range(len(sid_of_users)):
+        if users[sid_of_users[i]]["current_room"] == room_came_from and sid_of_users[i] != request_sid:
+            socketio.emit("PersonLeft", {"Name": users[request_sid]["user_name"]}, to=sid_of_users[i])
+
+    for i in range(len(sid_of_users)):
+        if users[sid_of_users[i]]["current_room"] == room and sid_of_users[i] != request_sid:
+            socketio.emit("PersonJoined", {"Name": users[request_sid]["user_name"]}, to=sid_of_users[i])
+
     users[request_sid]["current_room"] = room
     pp.pprint(users)
 
@@ -89,9 +105,15 @@ def change_room_to(data):
 @socketio.on('disconnect')
 def disconnect():
     request_sid = request.sid
+
+    person_name = users[request_sid]["user_name"]
+
     print("\033[33m [ - ] Disconnected", users[request_sid]["user_name"], "\033[0m")
     del users[request_sid]
     sid_of_users.remove(request_sid)
+
+    for i in range(len(sid_of_users)):
+            socketio.emit("PersonDisconnected", {"Name": person_name}, to=sid_of_users[i])
 
 
 
@@ -112,7 +134,7 @@ def GetChatNames():
 if __name__ == '__main__':
     databasemrg = DatabaseManger("sqlite:///MMe.db")
 
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, port=5000,host="0.0.0.0")
+    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, port=5000)
 
 
 

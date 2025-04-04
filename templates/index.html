@@ -19,6 +19,10 @@
 
     <div class="sidebar" id="sidebar">
         <span id="sidebarText">Chats</span>
+        <div class="info-room-container">
+            <span id ="currentUser_info">Hello</span>
+            <span id="currentRoom_info">HELLO</span>
+        </div>
         <div class = "controls">
              <button id="buttonA" type="button" onclick="show_config_screen()">Niewe Chat Maken</button>
 <!--              const messages = document.getElementById('messages');
@@ -36,12 +40,18 @@
     <div class="message_container">
 <!--        TODO: Info moet boven bericht staan-->
             <ul id="messages">
-                <li class="LLMresponds"><p>geen idee</p>
+                <li class="LLMresponds">
+
                 <div class="info-of-message">
                     <div class="name_of_user">Toad</div>
                     <div class="date_of_message">12:08</div>
-                </div>
 
+                </div>
+                    <div class="message_content">geen idee</div>
+
+                </li>
+                <li class="PersonLeft">
+                    <span class="person_name">Toad</span>
                 </li>
             </ul>
     </div>
