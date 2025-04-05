@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket.IO Example</title>
+    <title>Chatz</title>
     <link href="static/css/styles.css" rel="stylesheet" type="text/css" />
 <!--    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>-->
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
@@ -18,18 +18,35 @@
 
 
     <div class="sidebar" id="sidebar">
-        <span id="sidebarText">Chats</span>
+        <div class="centered-title">
+            <span id="sidebarText">Chatz</span>
+        </div>
+
         <div class="info-room-container">
-            <span id ="currentUser_info">Hello</span>
-            <span id="currentRoom_info">HELLO</span>
+            <div class="name_of_user_container">
+                 <span class="current_user_info_start">Naam</span>
+                 <span id ="currentUser_info"></span>
+            </div>
+            <div class="name_of_room_container">
+                 <span class="current_room_info_start">Kamer</span>
+                 <span id="currentRoom_info"></span>
+            </div>
+
         </div>
         <div class = "controls">
-             <button id="buttonA" type="button" onclick="show_config_screen()">Niewe Chat Maken</button>
+             <button id="buttonA" type="button" onclick="show_config_screen()">Niewe chat maken</button>
 <!--              const messages = document.getElementById('messages');
         messages.innerHTML = ''; // Verwijdert alle <li>-elementen binnen de lijst-->
         </div>
+        <div class="all_rooms_container">
+            <ul id="chatsL"></ul>
+        </div>
 
-        <ul id="chatsL"></ul>
+        <div class="additional_server_data">
+            <div class="user_online">
+                <span class="server_name">qewofjeiofjqweiojf</span>
+            </div>
+        </div>
 
 
     </div>
@@ -66,6 +83,21 @@
 
 
                          </div>
+
+        </div>
+
+        <div class="server_information">
+            <div class="information_server_u_container">
+                    <div class="people_online">
+                         <span class="online_status">Online:</span>
+                         <span id="user_who_are_online">FFF, FFF</span>
+                    </div>
+                    <div class="room_users_online">
+                         <span class="online_in_room">In kamer:</span>
+                         <span id="user_who_are_inroom"></span>
+
+                    </div>
+            </div>
 
         </div>
 

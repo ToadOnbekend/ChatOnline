@@ -251,7 +251,7 @@ display: none;
   font-weight: bold;
   position: relative;
   margin-top: 12px;
-  font-size:60px;
+  font-size:78px;
 
 }
 
@@ -264,17 +264,13 @@ display: none;
           position: fixed;
           left: 0;
           top: 0;
-text-align: center;
+/*text-align: center;*/
 
           overflow-y: hidden;
           transition: transform 0.3s ease, width 0.3s ease;
           z-index: 9999;
 }
 
-.sidebar.hidden {
-         transform: translateX(-100%);
-
-}
 
 
 
@@ -592,6 +588,7 @@ margin-right: 23px;
   padding: 4px;
   margin-top: 3px;
   overflow-x: hidden;
+  margin-top: 69px;
 }
 
 
@@ -720,4 +717,96 @@ margin-right: 23px;
     font-weight: 500;
     font-size: 17px;
 
+}
+
+.info-room-container{
+    display: flex;
+    flex-direction: column;
+    background-color: #dadada;
+
+    font-size: 25px;
+    padding-left: 12px;
+    padding-right: 8px;
+    font-weight: 700;
+    font-family: DinNext;
+    text-align: left;
+}
+
+.name_of_user_container{
+    gap:15px;
+        white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.name_of_room_container{
+    gap:15px;
+        white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: "...";
+}
+
+#currentUser_info{
+    font-weight: 100;
+
+}
+
+#currentRoom_info{
+    font-weight: 100;
+}
+
+
+.all_rooms_container{
+    margin-top: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.additional_server_data{
+
+    background-color: red;
+    padding:20px;
+    bottom: 0;
+    border: black solid 1px;
+}
+
+.centered-title{
+    text-align: center;
+}
+
+.server_information{
+    position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.information_server_u_container{
+   width: 60%;
+   border: black solid 1px;
+   margin-top: 5px;
+}
+
+.online_status{
+    font-family: DinNext;
+    font-size: 20px;
+    color: green;
+    font-weight: 700;
+}
+
+.online_in_room{
+        font-family: DinNext;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#user_who_are_online{
+    font-family: DinNext;
+    font-size: 20px;
+    font-weight: 100;
 }

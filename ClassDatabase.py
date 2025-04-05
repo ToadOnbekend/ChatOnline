@@ -110,20 +110,6 @@ class DatabaseManger:
         })
         self.session.commit()
 
-        result_initalization_pre = self.session.execute(text("""
-                                        SELECT  UserID
-                                        FROM Users
-                                        WHERE Name = :name
-                                        LIMIT 1;
-                                    """), {
-            "name": name
-        }).fetchall()
-
-        for result in result_initalization_pre:
-            current_id = result[0]
-
-        return current_id
-
     def add_message(self, room_name, user_name, content, date):
         retrivedUserId = self.session.execute(text("""
                                                        SELECT UserID  FROM Users WHERE Name = :user_name ;
@@ -209,11 +195,5 @@ class DatabaseManger:
 
         return users_col
 
-
-# databasemrg = DatabaseManger("sqlite:///MMe.db")
-#
-# databasemrg.add_user("Erg", "User")
-#
-# databasemrg.retrive_available_rooms()
 
 

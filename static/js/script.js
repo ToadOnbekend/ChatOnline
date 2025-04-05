@@ -3,6 +3,9 @@
 current_chat = "D99F1A1A-1D1A-4D1A-9D1A-1D1A1D1A1D1A-aAAx"
 current_user = prompt("What is your name?");
 
+document.getElementById("currentUser_info").textContent=current_user;
+users_online = []
+users_inroom = []
 f= "fdd"
 
 
@@ -16,6 +19,8 @@ socket.emit("register", {user_id: current_user});
 
 
 // const socket = io("http://localhost:5000");
+
+
 
 
 function SendMsg() {
@@ -99,7 +104,7 @@ function getCnames(data,idE){
          const button = document.createElement('button')
               button.textContent = data
               button.addEventListener('click', () => {
-                  change_room_to(data,idE); // Roep de functie aan bij klikken
+                  change_room_to(data,idE);
 
               });
 
@@ -111,6 +116,8 @@ function getCnames(data,idE){
 function change_room_to(data) {
     if (data != current_chat) {
 
+        users_inroom = []
+        update_information_room()
         old_room = current_chat;
         const messages = document.getElementById('messages');
         messages.innerHTML = '';
@@ -118,6 +125,8 @@ function change_room_to(data) {
         socket.emit("getmessagesofchat", {"room_name":data})
         socket.emit("change_room_to", {"room_name":data, "old_room": old_room});
         current_chat = data;
+
+        document.getElementById("currentRoom_info").textContent=current_chat;
     }
 
 }
@@ -171,15 +180,20 @@ function create_room(){
     const message = input_user.value;
 
     if (message !== "") {
-
+        old_room = current_chat;
         socket.emit('created_room', {"room_name": message});
 
 
         socket.emit("getmessagesofchat", {"room_name": message})
-        socket.emit("change_room_to", {"room_name": message})
+        socket.emit("change_room_to", {"room_name": message, "old_room": old_room});
         current_chat = message;
         input_user.value = "";
         document.getElementById('configScreen').style.display = 'none';
+        users_inroom = []
+        document.getElementById("currentRoom_info").textContent=current_chat
+        update_information_room()
+        getCnames(message)
+
     }
 }
 
@@ -208,38 +222,14 @@ function create_notify(data,status, info_text){
 }
 
 socket.on("PersonLeft", (data) => {
-
-     // const messages = document.getElementById('messages');
-     // const notify = document.createElement('li');
-     // const user_left = document.createElement('span');
-     //
-     // user_left.innerHTML = data["Name"] + "  | Left room";
-     //
-     // user_left.classList.add('person_name');
-     // notify.classList.add('PersonLeft');
-     //
-     // notify.appendChild(user_left);
-     //
-     // messages.appendChild(notify);
-     // scrollOnNewMSG()
+     users_inroom = users_inroom.filter(item => item !== data["Name"])
+     update_information_room()
      create_notify(data,"PersonLeft", " | Left room");
      })
 
 socket.on("PersonJoined", (data) => {
-     //
-     // const messages = document.getElementById('messages');
-     // const notify = document.createElement('li');
-     // const user_left = document.createElement('span');
-     //
-     // user_left.innerHTML = data["Name"] + "  | Joined room";
-     //
-     // user_left.classList.add('person_name');
-     // notify.classList.add('PersonJoined');
-     //
-     // notify.appendChild(user_left);
-     // messages.appendChild(notify);
-     //
-     // scrollOnNewMSG()
+    users_inroom.push(data["Name"])
+    update_information_room()
     create_notify(data,"PersonJoined", " | Joined room");
 
 
@@ -247,37 +237,46 @@ socket.on("PersonJoined", (data) => {
 
 socket.on("PersonDisconnected", (data) => {
 
-     // const messages = document.getElementById('messages');
-     // const notify = document.createElement('li');
-     // const user_left = document.createElement('span');
-     //
-     // user_left.innerHTML = data["Name"] + "  | Disconnected";
-     //
-     // user_left.classList.add('person_name');
-     // notify.classList.add('PersonDisconnected');
-     //
-     // notify.appendChild(user_left);
-     // messages.appendChild(notify);
-     //
-     // scrollOnNewMSG()
+    users_online = users_online.filter(item => item !== data["Name"])
+    update_information_online()
     create_notify(data,"PersonDisconnected", " | Disconnected");
+
 })
 
 socket.on("PersonConnected", (data) => {
-     //
-     // const messages = document.getElementById('messages');
-     // const notify = document.createElement('li');
-     // const user_left = document.createElement('span');
-     //
-     // user_left.innerHTML = data["Name"] + "  | Connected";
-     //
-     // user_left.classList.add('person_name');
-     // notify.classList.add('PersonConnected');
-     //
-     // notify.appendChild(user_left);
-     // messages.appendChild(notify);
-     //
-     // scrollOnNewMSG()
+
+    users_online.push(data["Name"])
+    update_information_online()
     create_notify(data,"PersonConnected", " | Connected");
+
+})
+
+function update_information_online(){
+     let info_who_is_online = users_online.join(', ')
+
+     console.log(info_who_is_online)
+     document.getElementById("user_who_are_online").textContent=info_who_is_online;
+}
+
+function update_information_room(){
+     let roomUsers = users_inroom.join(', ')
+
+     console.log(roomUsers)
+     document.getElementById("user_who_are_inroom").textContent=roomUsers;
+}
+
+socket.on("GetUsersOnline", (data) => {
+
+    users_online = users_online.concat(data["Users"])
+    update_information_online()
+
+
+})
+
+socket.on("GetUsersOfRoom", (data) => {
+    users_inroom = users_inroom.concat(data["Users"])
+    update_information_room()
+
+
 })
 

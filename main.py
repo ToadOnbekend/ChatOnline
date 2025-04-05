@@ -36,6 +36,7 @@ def handle_connect():
 @socketio.on('register')
 def handle_register(data):
         request_sid = request.sid
+        who_is_now_online = []
 
         user_id = data["user_id"]
 
@@ -49,20 +50,28 @@ def handle_register(data):
            socketio.emit("PersonConnected", {"Name": user_id}, to=sid_of_users[i])
 
         users[request_sid] = {"user_name": user_id, "current_room": "ffffffff", "requestSid": request_sid}
-        sid_of_users.append(request_sid)
 
+        for i in range(len(sid_of_users)):
+            who_is_now_online.append(users[sid_of_users[i]]["user_name"])
+
+        print("# ONLINE: ", who_is_now_online)
+
+        sid_of_users.append(request_sid)
+        socketio.emit("GetUsersOnline", {"Users": who_is_now_online}, to=request_sid)
 
 
         pp.pprint(users)
 
 @socketio.on('created_room')
 def handle_created_room(data):
+    request_sid = request.sid
     databasemrg.create_room(data["room_name"])
     chat_names = databasemrg.retrive_available_rooms()
     print(chat_names)
 
     for i in range(len(sid_of_users)):
-         socketio.emit("getChatNames", {"Name": chat_names["rooms"], "RoomId": chat_names["id"], "datemade":chat_names["datemade"]}, to=sid_of_users[i])
+         if sid_of_users[i] != request_sid:
+            socketio.emit("getChatNames", {"Name": chat_names["rooms"], "RoomId": chat_names["id"], "datemade":chat_names["datemade"]}, to=sid_of_users[i])
 
 
 
@@ -90,15 +99,20 @@ def change_room_to(data):
     room_came_from = data["old_room"]
     room = data["room_name"]
 
+    users_inroom = []
+
     for i in range(len(sid_of_users)):
         if users[sid_of_users[i]]["current_room"] == room_came_from and sid_of_users[i] != request_sid:
             socketio.emit("PersonLeft", {"Name": users[request_sid]["user_name"]}, to=sid_of_users[i])
 
     for i in range(len(sid_of_users)):
         if users[sid_of_users[i]]["current_room"] == room and sid_of_users[i] != request_sid:
+            users_inroom.append(users[sid_of_users[i]]["user_name"])
             socketio.emit("PersonJoined", {"Name": users[request_sid]["user_name"]}, to=sid_of_users[i])
 
+
     users[request_sid]["current_room"] = room
+    socketio.emit("GetUsersOfRoom", {"Users": users_inroom}, to=request_sid)
     pp.pprint(users)
 
 
