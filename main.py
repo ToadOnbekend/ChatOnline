@@ -20,7 +20,6 @@ users = {
 }
 sid_of_users = []
 
-#TODO: Kamers al voorladen
 
 @app.route('/')
 def index():
@@ -49,7 +48,7 @@ def handle_register(data):
         for i in range(len(sid_of_users)):
            socketio.emit("PersonConnected", {"Name": user_id}, to=sid_of_users[i])
 
-        users[request_sid] = {"user_name": user_id, "current_room": "ffffffff", "requestSid": request_sid}
+        users[request_sid] = {"user_name": user_id, "current_room": "ffffffff88888-XXa", "requestSid": request_sid}
 
         for i in range(len(sid_of_users)):
             who_is_now_online.append(users[sid_of_users[i]]["user_name"])
@@ -100,7 +99,7 @@ def change_room_to(data):
     room = data["room_name"]
 
     users_inroom = []
-
+    print("\033[34mRoom changed to ", room_came_from, "\033[0m")
     for i in range(len(sid_of_users)):
         if users[sid_of_users[i]]["current_room"] == room_came_from and sid_of_users[i] != request_sid:
             socketio.emit("PersonLeft", {"Name": users[request_sid]["user_name"]}, to=sid_of_users[i])
@@ -148,7 +147,7 @@ def GetChatNames():
 if __name__ == '__main__':
     databasemrg = DatabaseManger("sqlite:///MMe.db")
 
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, port=5000)
+    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, port=5000, host="0.0.0.0")
 
 
 

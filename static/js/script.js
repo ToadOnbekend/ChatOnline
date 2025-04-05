@@ -1,6 +1,7 @@
 
 
 current_chat = "D99F1A1A-1D1A-4D1A-9D1A-1D1A1D1A1D1A-aAAx"
+real_chat = "D99F1A1A-1D1A-4D1A-9D1A-1D1A1D1A1D1A-aAAx"
 current_user = prompt("What is your name?");
 
 document.getElementById("currentUser_info").textContent=current_user;
@@ -52,6 +53,7 @@ function userMSG(data){
 }
 
 function show_config_screen(){
+    current_chat = "D99F1A1A-1D1A-4D1A-9D1A-1D1A1D1A1D1A-aAAx"
     document.getElementById('configScreen').style.display = 'flex';
     const messages = document.getElementById('messages');
     messages.innerHTML = ''; }
@@ -125,6 +127,7 @@ function change_room_to(data) {
         socket.emit("getmessagesofchat", {"room_name":data})
         socket.emit("change_room_to", {"room_name":data, "old_room": old_room});
         current_chat = data;
+        real_chat = data;
 
         document.getElementById("currentRoom_info").textContent=current_chat;
     }
@@ -154,7 +157,9 @@ socket.on("getChatNames", (data) => {
 socket.on("LoadinComming", (data) => {
     // alert("IN comming")
     data = data.messageData
-    for (let i = 0; i < data.messageId.length; i++) {
+
+    if (current_chat !== "D99F1A1A-1D1A-4D1A-9D1A-1D1A1D1A1D1A-aAAx") {
+        for (let i = 0; i < data.messageId.length; i++) {
         let v = data.userName[i]
         let date_send = data.dateMade[i]
         console.log(date_send)
@@ -166,9 +171,10 @@ socket.on("LoadinComming", (data) => {
         } else {
             userMSG(data.content[i]);
         }
-
+         scrollOnNewMSG();}
     }
-    scrollOnNewMSG();
+
+
 
  })
 
@@ -180,7 +186,7 @@ function create_room(){
     const message = input_user.value;
 
     if (message !== "") {
-        old_room = current_chat;
+        old_room = real_chat;
         socket.emit('created_room', {"room_name": message});
 
 
@@ -238,7 +244,9 @@ socket.on("PersonJoined", (data) => {
 socket.on("PersonDisconnected", (data) => {
 
     users_online = users_online.filter(item => item !== data["Name"])
+    users_inroom = users_inroom.filter(item => item !== data["Name"])
     update_information_online()
+    update_information_room()
     create_notify(data,"PersonDisconnected", " | Disconnected");
 
 })
